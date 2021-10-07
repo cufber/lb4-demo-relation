@@ -1,6 +1,6 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model({name:'order'})
+@model({name: 'order'})
 export class Order extends Entity {
   @property({
     type: 'number',
@@ -21,6 +21,10 @@ export class Order extends Entity {
   })
   isDelivered: boolean;
 
+  @property({
+    type: 'number',
+  })
+  customerId?: number;
 
   constructor(data?: Partial<Order>) {
     super(data);

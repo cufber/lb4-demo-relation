@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,20 +17,24 @@ import {
   del,
   requestBody,
   response,
+  oas,
 } from '@loopback/rest';
-import {Customer} from '../models';
-import {CustomerRepository} from '../repositories';
+import { Customer } from '../models';
+import { CustomerRepository } from '../repositories';
+import { CustomerService } from '../services';
 
 export class CustomerController {
   constructor(
     @repository(CustomerRepository)
-    public customerRepository : CustomerRepository,
-  ) {}
+    public customerRepository: CustomerRepository,
+    @service(CustomerService)
+    public customerSvc:CustomerService
+  ) { }
 
   @post('/customers')
   @response(200, {
     description: 'Customer model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Customer)}},
+    content: { 'application/json': { schema: getModelSchemaRef(Customer) } },
   })
   async create(
     @requestBody({
@@ -50,7 +55,7 @@ export class CustomerController {
   @get('/customers/count')
   @response(200, {
     description: 'Customer model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async count(
     @param.where(Customer) where?: Where<Customer>,
@@ -65,7 +70,7 @@ export class CustomerController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Customer, {includeRelations: true}),
+          items: getModelSchemaRef(Customer, { includeRelations: true }),
         },
       },
     },
@@ -79,13 +84,13 @@ export class CustomerController {
   @patch('/customers')
   @response(200, {
     description: 'Customer PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Customer, {partial: true}),
+          schema: getModelSchemaRef(Customer, { partial: true }),
         },
       },
     })
@@ -100,13 +105,13 @@ export class CustomerController {
     description: 'Customer model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Customer, {includeRelations: true}),
+        schema: getModelSchemaRef(Customer, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
+    @param.filter(Customer, { exclude: 'where' }) filter?: FilterExcludingWhere<Customer>
   ): Promise<Customer> {
     return this.customerRepository.findById(id, filter);
   }
@@ -120,7 +125,7 @@ export class CustomerController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Customer, {partial: true}),
+          schema: getModelSchemaRef(Customer, { partial: true }),
         },
       },
     })
@@ -146,5 +151,22 @@ export class CustomerController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.customerRepository.deleteById(id);
+  }
+
+  @oas.tags('CustomController')
+  @get('/customers/custom')
+  @response(200, {
+    description: 'Array of Customer model instances include orders',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Customer, { includeRelations: true }),
+        },
+      },
+    },
+  })
+  async custom(): Promise<Customer[]> {
+    return this.customerSvc.custom();
   }
 }
