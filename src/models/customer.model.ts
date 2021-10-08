@@ -1,5 +1,6 @@
-import { Entity, hasMany, model, property } from '@loopback/repository';
+import { Entity, hasMany, model, property, hasOne} from '@loopback/repository';
 import { Order } from '.';
+import {Account} from './account.model';
 
 @model({ name: 'customer' })
 export class Customer extends Entity {
@@ -21,6 +22,9 @@ export class Customer extends Entity {
   // name的值与customer.repository.ts中的'orders'对应
   @hasMany(() => Order, { keyFrom: 'id', keyTo: 'customerId', name: 'orders' })
   orders: Order[];
+
+  @hasOne(() => Account, { keyFrom: 'id', keyTo: 'customerId', name: 'account' })
+  account: Account;
 
 
   constructor(data?: Partial<Customer>) {
