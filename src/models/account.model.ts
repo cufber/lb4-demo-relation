@@ -31,4 +31,4 @@ export interface AccountRelations {
   // describe navigational properties here
 }
 
-export type AccountWithRelations = Account & AccountRelations;
+export type AccountWithRelations = Account/*  & AccountRelations */;

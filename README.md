@@ -1,75 +1,62 @@
-# relation
+# Loopback4 Relation Demo
 
-This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
-[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
+**该文档仅做简单介绍，详细请参考[官方文档](https://loopback.io/doc/en/lb4/Relations.html)**
 
-## Install dependencies
+该文档将**主要讲解hasMany关系**，belongsTo/hasOne除提及外基本和hasMany差别不大
 
-By default, dependencies were installed when this application was generated.
-Whenever dependencies in `package.json` are changed, run the following command:
+- **Guide**
+  - **[Prepare](#Prepare)**
+  - **[hasMany](#hasMany)**
+  - **[belongsTo](#belongsTo)**
+  - **[hasOne](#hasOne)**
 
-```sh
-npm install
-```
+## Prepare {#Prepare}
 
-To only install resolved dependencies in `package-lock.json`:
+- 请先创建db，然后执行 [demo_lb4_relation.sql](./resource/demo_lb4_relation.sql) 文件内容即可。
+- 创建lb4 app
+- 创建DataSource
+- 创建DB table对应的model、repository
 
-```sh
-npm ci
-```
+## hasMany {#hasMany}
 
-## Run the application
+即 源model与目标model一对多的关系
 
-```sh
-npm start
-```
+**[对应官方文档](https://loopback.io/doc/en/lb4/HasMany-relation.html)**
 
-You can also run `node .` to skip the build step.
+创建该关系有如下**便利**
 
-Open http://127.0.0.1:3000 in your browser.
+- 通过源model的id对目标model做**CRUD**
+- 查询源model时可包含对应目标model资料并可做filter
 
-## Rebuild the project
+运行命令 `lb4 relation`，创建customer与order的**一对多**的关系，如下图
+![创建hasMany关系](./resource/1.创建hasMany关系.jpg)
 
-To incrementally build the project:
+根据截图可见，命令会自动生成customer与order的**一对多**的关系对应的**controller**。
+controller包含4个api，各api调用的正是分别对应**HasManyRepository**下的CRUD的方法(create/find/patch/delete)，作用是对原model下特定id对应的目标model的CRUD
+运行命令导致model和repository的改动可通过git log观察，详细解释请看官方文档
 
-```sh
-npm run build
-```
+另外，源model对应repository的find方法中的参数filter中的include属性可以利用起来，**[点击查看例子](.\src\services\customer.service.ts)**
 
-To force a full build by cleaning up cached artifacts:
+## belongsTo {#belongsTo}
 
-```sh
-npm run rebuild
-```
+即 源model与目标model多对一的关系
 
-## Fix code style and formatting issues
+创建该关系有如下**便利**
 
-```sh
-npm run lint
-```
+- 通过源model的id对目标model做**查询**
+- 查询源model时可包含对应目标model资料并可做filter
 
-To automatically fix such issues:
+运行命令截图如下
+![创建belongsTo关系](./resource/2.创建belongsTo关系.jpg)
 
-```sh
-npm run lint:fix
-```
+## hasOne {#hasOne}
 
-## Other useful commands
+即 源model与目标model一对一的关系
 
-- `npm run migrate`: Migrate database schemas for models
-- `npm run openapi-spec`: Generate OpenAPI spec into a file
-- `npm run docker:build`: Build a Docker image for this application
-- `npm run docker:run`: Run this application inside a Docker container
+创建该关系有如下**便利**
 
-## Tests
+- 通过源model的id对目标model做**CRUD**
+- 查询源model时可包含对应目标model资料并可做filter
 
-```sh
-npm test
-```
-
-## What's next
-
-Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
-understand how you can continue to add features to this application.
-
-[![LoopBack](https://github.com/strongloop/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
+运行命令截图如下
+![创建hasOne关系](./resource/3.创建hasOne关系.jpg)

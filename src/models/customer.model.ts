@@ -36,4 +36,4 @@ export interface CustomerRelations {
   // describe navigational properties here
 }
 
-export type CustomerWithRelations = Customer & CustomerRelations;
+export type CustomerWithRelations = Customer/*  & CustomerRelations */;

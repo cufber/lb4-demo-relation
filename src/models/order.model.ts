@@ -34,4 +34,4 @@ export interface OrderRelations {
   // describe navigational properties here
 }
 
-export type OrderWithRelations = Order & OrderRelations;
+export type OrderWithRelations = Order/*  & OrderRelations */;
